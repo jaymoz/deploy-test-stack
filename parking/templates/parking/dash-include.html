@@ -1,0 +1,20 @@
+{% load auth_extras %}
+<div class="col-lg-3 col-md-12">
+    <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
+        <div class="dash__pad-1">
+
+            <span class="dash__text u-s-m-b-16">Hey! {{request.user}} </span>
+            <ul class="dash__f-list">
+                <li>
+
+                    <a class="dash-active" href="{% url 'parking-spaces' %}">View parking spaces</a></li>
+                <li>
+                    {% if request.user.is_staff or request.user|has_group:"Manager" %}
+                    <li>
+
+                        <a class="dash-active" href="{% url 'home' %}">View all bookings</a></li>
+                    {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,156 @@
+{% extends 'parking/dashboard_link.html' %}
+{% load static %}
+{% load auth_extras %}
+{% block content %}
+
+<section  style="margin-top: 100px; margin-bottom:100px;"> 
+<div class="u-s-p-b-60">
+
+    <div class="section__content">
+        <div class="dash">
+            <div class="container">
+                <div class="row">
+                    {% include 'parking/dash-include.html' %}
+                    <div class="col-lg-9 col-md-12">
+                        <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+                            <div class="dash__pad-2">
+                                <h1 class="dash__h1 u-s-m-b-14"><b>Fregat office center</b></h1>
+                                <br>
+                                {% if request.user.is_staff or request.user|has_group:"Manager" %}
+                                <th><a href="{% url 'add-space' %}" class="manage-o__badge badge--processing">Add Parking Space</a></th>
+                                {% endif %}
+                                <br>
+                                <hr>
+                                <br>
+                                <p>Kindly contact the administrator to make changes regarding bookings</p>
+                                <br>
+                                <th class="dash__h1 u-s-m-b-14">Book a space</th>
+                                <th><a href="{% url 'parking-spaces' %}" class="manage-o__badge badge--processing">book</a></th>
+                                <br>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 u-s-m-b-30">
+                                        <div class="dash__box dash__box--bg-grey dash__box--shadow-2 u-h-100">
+                                            <div class="dash__pad-3">
+                                                <h2 class="dash__h2 u-s-m-b-8">PERSONAL PROFILE</h2>
+                                                <div class="dash__link dash__link--secondary u-s-m-b-8">
+
+                                                    <span class="dash__text">Username: {{request.user.username}}</span>
+
+                                                    <span class="dash__text">Email: {{request.user.email}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 u-s-m-b-30">
+                                        <div class="dash__box dash__box--bg-grey dash__box--shadow-2 u-h-100">
+                                            <div class="dash__pad-3">
+                                                <h2 class="dash__h2 u-s-m-b-8"></h2>
+                                                <div class="dash__link dash__link--secondary u-s-m-b-8">
+
+                                                    <span class="dash__text"></span>
+
+                                                    <span class="dash__text"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                            </div>
+                        </div>
+                        {% if request.user.is_staff or request.user|has_group:"Manager" %}
+                        <div class="dash__box dash__box--shadow dash__box--bg-white dash__box--radius">
+                            <h2 class="dash__h2 u-s-p-xy-20"><b>bookings</b></h2>
+                            <div class="dash__table-wrap gl-scroll">
+                                <table class="dash__table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket #</th>
+                                            <th>Parking Space</th>
+                                            <th>Manufacturer</th>
+                                            <th>Car model</th>
+                                            <th>Color</th>
+                                            <th>Plate number</th>
+                                            <th>Start period</th>
+                                            <th>End period</th>
+                                            <th>Active</th>
+                                            <th>Phone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for all in all_bookings %}
+                                        <tr>
+                                            <td>{{all.ticket}}</td>
+                                            <td>{{all.parking_space}}</td>
+                                            <td>{{all.manufacturer}}</td>
+                                            <td>{{all.car_model}}</td>
+                                            <td>{{all.color}}</td>
+                                            <td>{{all.plate_number}}</td>
+                                            <td>{{all.start_period}}</td>
+                                            <td>{{all.end_period}}</td>
+                                            {% if all.is_booked == True %}
+                                            <th><a class="manage-o__badge badge--shipped">Active</a></th>
+                                            {% elif all.is_booked == False %}
+                                            <th><a class="manage-o__badge badge--delivered">Expired</a></th>
+                                            {% endif %}
+                                            <td>{{all.phone}}</td>
+                                            <th><a href="{% url 'edit-booking' all.id %}" class="manage-o__badge badge--processing">Edit</a></th>
+                                            <th><a href="{% url 'cancel' all.id %}" class="manage-o__badge badge--delivered">cancel</a></th>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="dash__box dash__box--shadow dash__box--bg-white dash__box--radius">
+                            <h2 class="dash__h2 u-s-p-xy-20"><b>My bookings</b></h2>
+                            <div class="dash__table-wrap gl-scroll">
+                                <table class="dash__table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket #</th>
+                                            <th>Parking Space</th>
+                                            <th>Manufacturer</th>
+                                            <th>Car model</th>
+                                            <th>Color</th>
+                                            <th>Plate number</th>
+                                            <th>Start period</th>
+                                            <th>End period</th>
+                                            <th>Active</th>
+                                            <th>Phone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for all in user_bookings %}
+                                        <tr>
+                                            <td>{{all.ticket}}</td>
+                                            <td>{{all.parking_space}}</td>
+                                            <td>{{all.manufacturer}}</td>
+                                            <td>{{all.car_model}}</td>
+                                            <td>{{all.color}}</td>
+                                            <td>{{all.plate_number}}</td>
+                                            <td>{{all.start_period}}</td>
+                                            <td>{{all.end_period}}</td>
+                                            {% if all.is_booked %}
+                                            <th><a class="manage-o__badge badge--shipped">Active</a></th>
+                                            {% else %}
+                                            <th><a class="manage-o__badge badge--delivered">Expired</a></th>
+                                            {% endif %}
+                                            <td>{{all.phone}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+{% endblock %}
